@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Dasha ❤️</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: #09000e;
+    color: white;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+}
+
+#screen {
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.intro {
+    text-align: center;
+    z-index: 10;
+    transition: 1s;
+}
+
+h1 {
+    color: #ff6baf;
+    font-size: 35px;
+    text-shadow: 0 0 20px #ff2788;
+}
+
+button {
+    background: linear-gradient(45deg,#ff287f,#ff75b5);
+    color: white;
+    border: none;
+    border-radius: 40px;
+    padding: 17px 40px;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 0 25px #ff287f;
+}
+
+.word {
+    position: absolute;
+    font-weight: bold;
+    white-space: nowrap;
+    transform: translate(-50%,-50%) scale(.2);
+    opacity: 0;
+    transition:
+      left 2s cubic-bezier(.2,.8,.2,1),
+      top 2s cubic-bezier(.2,.8,.2,1),
+      opacity 1.5s,
+      transform 1.5s;
+}
+
+.word.show {
+    opacity: 1;
+    transform: translate(-50%,-50%) scale(1);
+}
+
+.word.pulse {
+    animation: pulse 1.5s infinite alternate;
+}
+
+@keyframes pulse {
+    from { text-shadow: 0 0 5px currentColor; }
+    to { text-shadow: 0 0 25px currentColor, 0 0 40px currentColor; }
+}
+</style>
+</head>
+
+<body>
+
+<div id="screen">
+
+    <div class="intro" id="intro">
+        <h1>For you, Dasha ❤️</h1>
+        <p>I have something special for you...</p>
+        <button onclick="startLove()">Открыть ❤️</button>
+    </div>
+
+</div>
+
+<script>
+function startLove() {
+    const intro = document.getElementById("intro");
+    intro.style.opacity = "0";
+    intro.style.pointerEvents = "none";
+
+    const screen = document.getElementById("screen");
+
+    const total = 90;
+    const words = [];
+
+    for (let i = 0; i < total; i++) {
+        const el = document.createElement("div");
+
+        el.className = "word";
+        el.innerText = i % 2 === 0 ? "I love you" : "Dasha";
+        el.style.color = i % 2 === 0 ? "#ff4d9d" : "#ffffff";
+        el.style.fontSize = (12 + Math.random()*7) + "px";
+
+        const side = Math.floor(Math.random()*4);
+
+        let startX, startY;
+
+        if (side === 0) {
+            startX = -10; startY = Math.random()*100;
+        } else if (side === 1) {
+            startX = 110; startY = Math.random()*100;
+        } else if (side === 2) {
+            startX = Math.random()*100; startY = -10;
+        } else {
+            startX = Math.random()*100; startY = 110;
+        }
+
+        el.style.left = startX + "%";
+        el.style.top = startY + "%";
+
+        screen.appendChild(el);
+        words.push(el);
+    }
+
+    requestAnimationFrame(() => {
+        words.forEach((el, i) => {
+            const t = i * Math.PI * 2 / total;
+
+            const x = 16 * Math.pow(Math.sin(t), 3);
+            const y = 13*Math.cos(t)
+                - 5*Math.cos(2*t)
+                - 2*Math.cos(3*t)
+                - Math.cos(4*t);
+
+            setTimeout(() => {
+                el.style.left = (50 + x*2.1) + "%";
+                el.style.top = (50 - y*2.2) + "%";
+                el.classList.add("show");
+            }, i*35);
+        });
+
+        setTimeout(() => {
+            words.forEach(el => el.classList.add("pulse"));
+        }, 5500);
+    });
+}
+</script>
+
+</body>
+</html>
